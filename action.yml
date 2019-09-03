@@ -1,7 +1,7 @@
-name: 'Container Action Template'
-description: 'Get started with Container actions'
-author: 'GitHub'
-inputs: 
+name: 'Open Next PR'
+description: 'Open PRs depending on other PRs automatically.'
+author: 'realglobe, Inc.'
+inputs:
   myInput:
     description: 'Input to use'
     default: 'world'

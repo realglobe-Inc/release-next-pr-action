@@ -1,7 +1,7 @@
 {
-  "name": "container-toolkit-template",
+  "name": "open-next-pr-action",
   "version": "0.0.0",
-  "description": "Container template action using actions/toolkit",
+  "description": "A GitHub Action to open PRs depending on other PRs automatically.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,20 +10,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/container-toolkit-template.git"
+    "url": "git+https://github.com/realglobe-Inc/open-next-pr-action.git"
   },
   "keywords": [
     "actions",
-    "container",
-    "toolkit",
-    "setup"
+    "development",
+    "review"
   ],
-  "author": "GitHub",
+  "author": "realglobe, Inc.",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/actions/container-toolkit-template/issues"
+    "url": "https://github.com/realglobe-Inc/open-next-pr-action/issues"
   },
-  "homepage": "https://github.com/actions/container-toolkit-template#readme",
+  "homepage": "https://github.com/realglobe-Inc/open-next-pr-action",
   "dependencies": {
     "@actions/core": "^1.0.0",
     "@actions/io": "^1.0.0",
