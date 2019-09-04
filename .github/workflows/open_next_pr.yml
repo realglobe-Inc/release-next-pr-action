@@ -1,0 +1,13 @@
+name: Open Next PR
+
+on: watch
+
+jobs:
+  open_next_pr:
+    name: Open Next PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open Next PR
+        uses: realglobe-Inc/open-next-pr-action@master
+        with:
+          myInput: yah yah yah
