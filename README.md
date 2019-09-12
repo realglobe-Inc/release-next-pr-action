@@ -11,7 +11,7 @@ This is an experimental project. WIP.
 |    :notes:     |    `:notes:`     | improve behavior or API                            |      Major update (*1)      |
 |   :sparkles:   |   `:sparkles:`   | implement a new function or the first commit       |      Minor update (*1)      |
 |     :bug:      |     `:bug:`      | fix a bug                                          |      Patch update (*1)      |
-| :horse_racing: | `:horse_racing:` | improve performance                                | Non-functional feature (*2) |
+|    :horse:     |    `:horse:`     | improve performance                                | Non-functional feature (*2) |
 |     :lock:     |     `:lock:`     | improve security                                   | Non-functional feature (*2) |
 |     :mag:      |     `:mag:`      | about test codes                                   |       Maintenability        |
 |     :memo:     |     `:memo:`     | about documentation                                |       Maintenability        |
@@ -22,5 +22,5 @@ This is an experimental project. WIP.
 |    :rocket:    |    `:rocket:`    | about a deploy                                     |           Deploy            |
 | :construction: | `:construction:` | WIP (work in progress)                             |          Temporary          |
 
-*1) By the semantic versioning
-*2) These may belong to minor update.  
+*1) By the semantic versioning\
+*2) These may belong to minor update.
