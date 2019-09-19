@@ -1,5 +1,5 @@
-name: 'Open Next PR'
-description: 'Open PRs depending on other PRs automatically.'
+name: 'Release Next PR'
+description: 'Release PRs depending on the merged PR automatically.'
 author: 'realglobe, Inc.'
 inputs:
   github-token:

@@ -1,4 +1,4 @@
-# Open Next PR
+# Release Next PR
 
 This is an experimental project. WIP.
 

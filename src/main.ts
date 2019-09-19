@@ -64,13 +64,15 @@ async function run() {
 
       if (!nextPR.draft) {
         // fail but continue
-        core.setFailed(`#${nextPR.number} pull request is already open.`)
+        core.setFailed(
+          `#${nextPR.number} pull request is already released for review.`,
+        )
       }
 
       nextPRs.push(nextPR)
     }
 
-    // open next PRs
+    // release next PRs
     for (const nextPR of nextPRs) {
       const { status } = await client.pulls.update({
         ...github.context.repo,
@@ -79,10 +81,12 @@ async function run() {
       })
       if (status !== 200) {
         // fail but continue
-        core.setFailed(`Failed to open #${nextPR.number} pull request: status ${status}`)
+        core.setFailed(
+          `Failed to release #${nextPR.number} pull request: status ${status}`,
+        )
         continue
       }
-      core.info(`Opend #${nextPR.number} pull request!`)
+      core.info(`Released #${nextPR.number} pull request for review!`)
     }
 
     core.info('Complete!')

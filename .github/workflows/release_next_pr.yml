@@ -1,0 +1,15 @@
+name: Release Next PR
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  release_next_pr:
+    name: Release Next PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Next PR
+        uses: realglobe-Inc/release-next-pr-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
