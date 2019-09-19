@@ -1,6 +1,8 @@
 name: Open Next PR
 
-on: watch
+on:
+  pull_request:
+    types: [closed]
 
 jobs:
   open_next_pr:
@@ -10,4 +12,4 @@ jobs:
       - name: Open Next PR
         uses: realglobe-Inc/open-next-pr-action@master
         with:
-          myInput: yah yah yah
+          github-token: ${{ secrets.GITHUB_TOKEN }}
