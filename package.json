@@ -25,10 +25,7 @@
   "homepage": "https://github.com/realglobe-Inc/open-next-pr-action",
   "dependencies": {
     "@actions/core": "^1.1.1",
-    "@actions/exec": "^1.0.1",
     "@actions/github": "^1.1.0",
-    "@actions/io": "^1.0.1",
-    "@actions/tool-cache": "^1.1.1",
     "@types/node": "^12.7.5",
     "typescript": "^3.6.3"
   },
