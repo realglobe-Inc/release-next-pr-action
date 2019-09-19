@@ -74,11 +74,25 @@ async function run() {
 
     // release next PRs
     for (const nextPR of nextPRs) {
-      const { status } = await client.pulls.update({
-        ...github.context.repo,
-        pull_number: nextPR.number,
-        // draft: true,
-      })
+      // NOTE: This is an ideal way but `draft` property is not supported...
+      // const { status } = await client.pulls.update({
+      //   ...github.context.repo,
+      //   pull_number: nextPR.number,
+      //   draft: true, // unsupported!
+      // })
+      // NOTE: This is the second best way, using the low-level method.
+      const { status } = await client.request(
+        'PATCH /repos/:owner/:repo/pulls/:pull_number',
+        {
+          ...github.context.repo,
+          pull_number: nextPR.number,
+          draft: true,
+          mediaType: {
+            previews: ['shadow-cat'],
+          },
+        },
+      )
+
       if (status !== 200) {
         // fail but continue
         core.setFailed(
