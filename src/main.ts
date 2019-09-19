@@ -78,7 +78,7 @@ async function run() {
       // const { status } = await client.pulls.update({
       //   ...github.context.repo,
       //   pull_number: nextPR.number,
-      //   draft: true, // unsupported!
+      //   draft: false, // unsupported!
       // })
       // NOTE: This is the second best way, using the low-level method.
       const { status } = await client.request(
@@ -86,7 +86,7 @@ async function run() {
         {
           ...github.context.repo,
           pull_number: nextPR.number,
-          draft: true,
+          draft: false,
           mediaType: {
             previews: ['shadow-cat'],
           },
