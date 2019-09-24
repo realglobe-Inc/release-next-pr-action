@@ -67,6 +67,7 @@ async function run() {
         core.setFailed(
           `#${nextPR.number} pull request is already released for review.`,
         )
+        continue
       }
 
       nextPRs.push(nextPR)
