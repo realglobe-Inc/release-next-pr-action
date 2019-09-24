@@ -57,7 +57,7 @@ async function run() {
       core.debug(
         `Base issues of #${pr.number} are [${baseIssueNumbers.join(', ')}]`,
       )
-      if (!baseIssueNumbers.includes(pr.number)) {
+      if (!baseIssueNumbers.includes(thePR.number)) {
         continue
       }
       const nextPR = pr
