@@ -40,7 +40,9 @@ async function run() {
     }
 
     // get open PRs
-    const client: github.GitHub = new github.GitHub(token)
+    const client: github.GitHub = new github.GitHub(token, {
+      previews: ['shadow-cat'], // to use "The Draft Pull Request API"
+    })
 
     const { status, data: pullRequests } = await client.pulls.list(
       github.context.repo,
@@ -89,7 +91,7 @@ async function run() {
           pull_number: nextPR.number,
           draft: false,
           mediaType: {
-            previews: ['shadow-cat'],
+            previews: ['shadow-cat'], // to use "The Draft Pull Request API"
           },
         },
       )
