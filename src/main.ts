@@ -75,34 +75,40 @@ async function run() {
       nextPRs.push(nextPR)
     }
 
+    //
     // release next PRs
+    //
+
+    // NOTE: Use the GraphQL API v4 to update draft statuses.
+    // We tried to use the REST API v3 before, but it does not work well.
+    // It seems that the REST API v3 cannot update draft statuses.
+    // In detail, see and run old codes through Git.
+
+    // - prepare to use "The Draft Pull Request API"
+    // NOTE: 'defaults' is not defined in the type, but the value exists.
+    const graphql = client.graphql['defaults']({
+      mediaType: {
+        previews: ['shadow-cat'],
+      },
+    })
+
+    // - release next PRs
     for (const nextPR of nextPRs) {
-      // NOTE: This is an ideal way but `draft` property is not supported...
-      // const { status } = await client.pulls.update({
-      //   ...github.context.repo,
-      //   pull_number: nextPR.number,
-      //   draft: false, // unsupported!
-      // })
-      // NOTE: This is the second best way, using the low-level method.
-      const { status } = await client.request(
-        'PATCH /repos/:owner/:repo/pulls/:pull_number',
+      await graphql(
+        `
+          mutation($input: MarkPullRequestReadyForReviewInput!) {
+            markPullRequestReadyForReview(input: $input) {
+              clientMutationId
+            }
+          }
+        `,
         {
-          ...github.context.repo,
-          pull_number: nextPR.number,
-          draft: false,
-          mediaType: {
-            previews: ['shadow-cat'], // to use "The Draft Pull Request API"
+          input: {
+            pullRequestId: nextPR.node_id,
           },
         },
       )
 
-      if (status !== 200) {
-        // fail but continue
-        core.setFailed(
-          `Failed to release #${nextPR.number} pull request: status ${status}`,
-        )
-        continue
-      }
       core.info(`Released #${nextPR.number} pull request for review!`)
     }
 
