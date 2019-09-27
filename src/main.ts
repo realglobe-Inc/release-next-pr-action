@@ -14,12 +14,21 @@ async function run() {
     }
     const mergedPR: any = github.context.payload.pull_request
 
-    // get open PRs
-    const client: github.GitHub = new github.GitHub(token, {
+    // prepare for use GitHub API Client
+    // - REST
+    const ghRest: github.GitHub = new github.GitHub(token, {
       previews: ['shadow-cat'], // to use "The Draft Pull Request API"
     })
+    // - GraphQL
+    // NOTE: 'defaults' is not defined in the type, but the value exists.
+    const ghGraphql = ghRest.graphql['defaults']({
+      mediaType: {
+        previews: ['shadow-cat'], // to use "The Draft Pull Request API"
+      },
+    })
 
-    const { status, data: pullRequests } = await client.pulls.list(
+    // get open PRs
+    const { status, data: pullRequests } = await ghRest.pulls.list(
       github.context.repo,
     )
     if (status !== 200) {
@@ -50,26 +59,13 @@ async function run() {
       nextPRs.push(nextPR)
     }
 
-    //
     // release next PRs
-    //
-
     // NOTE: Use the GraphQL API v4 to update draft statuses.
     // We tried to use the REST API v3 before, but it does not work well.
     // It seems that the REST API v3 cannot update draft statuses.
     // In detail, see and run old codes through Git.
-
-    // - prepare to use "The Draft Pull Request API"
-    // NOTE: 'defaults' is not defined in the type, but the value exists.
-    const graphql = client.graphql['defaults']({
-      mediaType: {
-        previews: ['shadow-cat'],
-      },
-    })
-
-    // - release next PRs
     for (const nextPR of nextPRs) {
-      await graphql(
+      await ghGraphql(
         `
           mutation($input: MarkPullRequestReadyForReviewInput!) {
             markPullRequestReadyForReview(input: $input) {
