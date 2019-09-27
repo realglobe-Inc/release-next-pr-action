@@ -8,36 +8,11 @@ async function run() {
     // get inputs
     const token: string = core.getInput('github-token', { required: true })
 
-    // check the event's kind
-    const eventName: string = github.context.eventName
-    if (eventName !== 'pull_request') {
-      core.info(
-        `Nothing to do since the event is "${eventName}", not "pull_request". Bye.`,
-      )
+    // check context
+    if (!isTargetContext(github.context)) {
       return
     }
-
-    // check the pull_request event's kind
-    const payload = github.context.payload
-    if (payload.action !== 'closed') {
-      core.info(
-        `Nothing to do since the pull request's action is "${payload.action}", not "closed". Bye.`,
-      )
-      return
-    }
-
-    // check whether the PR is merged
-    const thePR = payload.pull_request
-    if (thePR == null) {
-      core.setFailed(
-        `Failed to fetch the pull request from the event's payload.`,
-      )
-      return
-    }
-    if (!thePR.merged) {
-      core.info(`Nothing to do since the pull request is not merged. Bye.`)
-      return
-    }
+    const mergedPR: any = github.context.payload.pull_request
 
     // get open PRs
     const client: github.GitHub = new github.GitHub(token, {
@@ -59,7 +34,7 @@ async function run() {
       core.debug(
         `Base issues of #${pr.number} are [${baseIssueNumbers.join(', ')}]`,
       )
-      if (!baseIssueNumbers.includes(thePR.number)) {
+      if (!baseIssueNumbers.includes(mergedPR.number)) {
         continue
       }
       const nextPR = pr
@@ -116,6 +91,39 @@ async function run() {
   } catch (error) {
     core.setFailed(error)
   }
+}
+
+function isTargetContext(context): Boolean {
+  // check the event's kind
+  const eventName: string = context.eventName
+  if (eventName !== 'pull_request') {
+    core.info(
+      `Nothing to do since the event is "${eventName}", not "pull_request". Bye.`,
+    )
+    return false
+  }
+
+  // check the pull_request event's kind
+  const payload = context.payload
+  if (payload.action !== 'closed') {
+    core.info(
+      `Nothing to do since the pull request's action is "${payload.action}", not "closed". Bye.`,
+    )
+    return false
+  }
+
+  // check whether the PR is merged
+  const pr = payload.pull_request
+  if (pr == null) {
+    core.setFailed(`Failed to fetch the pull request from the event's payload.`)
+    return false
+  }
+  if (!pr.merged) {
+    core.info(`Nothing to do since the pull request is not merged. Bye.`)
+    return false
+  }
+
+  return true
 }
 
 run()
