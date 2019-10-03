@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
+import GitHubClient from './github-client'
 import PRAnalyzer from './pr-analyzer'
 
 async function run() {
@@ -14,25 +15,13 @@ async function run() {
     }
     const mergedPR: any = github.context.payload.pull_request
 
-    // prepare for use GitHub API Client
-    // - REST
-    const ghRest: github.GitHub = new github.GitHub(token, {
-      previews: ['shadow-cat'], // to use "The Draft Pull Request API"
-    })
-    // - GraphQL
-    // NOTE: 'defaults' is not defined in the type, but the value exists.
-    const ghGraphql = ghRest.graphql['defaults']({
-      mediaType: {
-        previews: ['shadow-cat'], // to use "The Draft Pull Request API"
-      },
-    })
-
     // get open PRs
-    const { status, data: pullRequests } = await ghRest.pulls.list(
-      github.context.repo,
+    const client = new GitHubClient(token)
+    const { data: pullRequests, error: getPRsError } = await client.getOpenPRs(
+      github.context,
     )
-    if (status !== 200) {
-      core.setFailed(`Failed to get pull requests: status ${status}`)
+    if (getPRsError) {
+      core.setFailed(getPRsError)
       return
     }
 
@@ -60,32 +49,19 @@ async function run() {
     }
 
     // release next PRs
-    // NOTE: Use the GraphQL API v4 to update draft statuses.
-    // We tried to use the REST API v3 before, but it does not work well.
-    // It seems that the REST API v3 cannot update draft statuses.
-    // In detail, see and run old codes through Git.
     for (const nextPR of nextPRs) {
-      await ghGraphql(
-        `
-          mutation($input: MarkPullRequestReadyForReviewInput!) {
-            markPullRequestReadyForReview(input: $input) {
-              clientMutationId
-            }
-          }
-        `,
-        {
-          input: {
-            pullRequestId: nextPR.node_id,
-          },
-        },
-      )
+      const { error: releaseError } = await client.releasePR(nextPR.node_id)
+      if (releaseError) {
+        core.setFailed(releaseError)
+        return
+      }
 
       core.info(`Released #${nextPR.number} pull request for review!`)
     }
 
     core.info('Complete!')
-  } catch (error) {
-    core.setFailed(error)
+  } catch (err) {
+    core.setFailed(err)
   }
 }
 
