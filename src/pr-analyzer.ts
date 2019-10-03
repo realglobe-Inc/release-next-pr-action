@@ -1,6 +1,8 @@
+import { PullRequest } from './github-interfaces'
+
 export default class {
-  _pr: any
-  constructor(pr) {
+  _pr: PullRequest
+  constructor(pr: PullRequest) {
     this._pr = pr
   }
 
@@ -8,12 +10,12 @@ export default class {
     const issues: number[] = []
 
     const statementReg = /^[ \t]*after[ \t]*((?:#(?:\d+)[ \t]*,?[ \t]*)+)/gim
-    let statementMatch: any
+    let statementMatch: string[] | null
     while ((statementMatch = statementReg.exec(this._pr.body)) != null) {
       const issuesText: string = statementMatch[1]
 
       const issueReg = /#(\d+)/g
-      let issueMatch: any
+      let issueMatch: string[] | null
       while ((issueMatch = issueReg.exec(issuesText)) != null) {
         const issueNumber: number = Number(issueMatch[1])
 

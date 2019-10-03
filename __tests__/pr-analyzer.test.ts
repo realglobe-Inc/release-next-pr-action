@@ -1,4 +1,5 @@
 import PRAnalyzer from '../src/pr-analyzer'
+import { PullRequest } from '../src/github-interfaces'
 
 describe('PRAnalyzer', () => {
   describe('baseIssues', () => {
@@ -56,7 +57,13 @@ describe('PRAnalyzer', () => {
 
     cases.forEach(({ behavior, prBody, expected }) => {
       it(behavior, async () => {
-        const pr = { body: prBody }
+        const pr: PullRequest = {
+          body: prBody,
+          draft: false,
+          merged: false,
+          node_id: '',
+          number: 0,
+        }
         const analyzer = new PRAnalyzer(pr)
         expect(analyzer.baseIssues()).toEqual(expected)
       })

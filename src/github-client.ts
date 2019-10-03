@@ -1,27 +1,32 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
+import { PullRequest, GraphQl, Context } from './github-interfaces'
+
 export default class {
   // third-party client objects
   _rest: github.GitHub // REST API v3
-  _graphql: any // GraphQL API v4
+  _graphql: GraphQl // GraphQL API v4
 
   constructor(token: string) {
     this._rest = new github.GitHub(token, {
       previews: ['shadow-cat'], // to use "The Draft Pull Request API"
     })
-    // NOTE: 'defaults' is not defined in the type, but the value exists.
-    this._graphql = this._rest.graphql['defaults']({
+    const graphql = this._rest.graphql as GraphQl
+    this._graphql = graphql.defaults({
       mediaType: {
         previews: ['shadow-cat'], // to use "The Draft Pull Request API"
       },
     })
   }
 
-  async getOpenPRs(context: any): Promise<{ data: any[]; error: string }> {
-    const { status, data: pullRequests } = await this._rest.pulls.list(
-      context.repo,
-    )
+  async getOpenPRs(
+    context: Context,
+  ): Promise<{ data: PullRequest[]; error: string }> {
+    const {
+      status,
+      data: pullRequests,
+    }: { status: number; data: any } = await this._rest.pulls.list(context.repo)
     if (status !== 200) {
       core.setFailed(`Failed to get pull requests: status ${status}`)
       return {
@@ -29,7 +34,7 @@ export default class {
         error: `Failed to get pull requests: status ${status}`,
       }
     }
-    return { data: pullRequests, error: '' }
+    return { data: pullRequests as PullRequest[], error: '' }
   }
 
   // NOTE: Use the GraphQL API v4 to update draft statuses.
