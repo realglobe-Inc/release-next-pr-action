@@ -8,14 +8,14 @@ export default class {
     const issues: number[] = []
 
     const statementReg = /^[ \t]*after[ \t]*((?:#(?:\d+)[ \t]*,?[ \t]*)+)/gim
-    let statementMatch
+    let statementMatch: any
     while ((statementMatch = statementReg.exec(this._pr.body)) != null) {
-      const issuesText = statementMatch[1]
+      const issuesText: string = statementMatch[1]
 
       const issueReg = /#(\d+)/g
-      let issueMatch
+      let issueMatch: any
       while ((issueMatch = issueReg.exec(issuesText)) != null) {
-        const issueNumber = Number(issueMatch[1])
+        const issueNumber: number = Number(issueMatch[1])
 
         issues.push(issueNumber)
       }

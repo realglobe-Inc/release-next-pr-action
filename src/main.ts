@@ -4,7 +4,7 @@ import * as github from '@actions/github'
 import GitHubClient from './github-client'
 import PRAnalyzer from './pr-analyzer'
 
-async function run() {
+async function run(): Promise<void> {
   try {
     // get inputs
     const token: string = core.getInput('github-token', { required: true })
@@ -35,7 +35,7 @@ async function run() {
       if (!baseIssueNumbers.includes(mergedPR.number)) {
         continue
       }
-      const nextPR = pr
+      const nextPR: any = pr
 
       if (!nextPR.draft) {
         // fail but continue
@@ -65,7 +65,7 @@ async function run() {
   }
 }
 
-function isTargetContext(context): Boolean {
+function isTargetContext(context: any): Boolean {
   // check the event's kind
   const eventName: string = context.eventName
   if (eventName !== 'pull_request') {
@@ -76,7 +76,7 @@ function isTargetContext(context): Boolean {
   }
 
   // check the pull_request event's kind
-  const payload = context.payload
+  const payload: any = context.payload
   if (payload.action !== 'closed') {
     core.info(
       `Nothing to do since the pull request's action is "${payload.action}", not "closed". Bye.`,
@@ -85,7 +85,7 @@ function isTargetContext(context): Boolean {
   }
 
   // check whether the PR is merged
-  const pr = payload.pull_request
+  const pr: any = payload.pull_request
   if (pr == null) {
     core.setFailed(`Failed to fetch the pull request from the event's payload.`)
     return false
