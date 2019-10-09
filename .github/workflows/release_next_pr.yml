@@ -12,4 +12,4 @@ jobs:
       - name: Release Next PR
         uses: realglobe-Inc/release-next-pr-action@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.MY_GITHUB_TOKEN }}
