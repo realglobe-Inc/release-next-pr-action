@@ -20,6 +20,11 @@ describe('PRAnalyzer', () => {
         expected: [42],
       },
       {
+        behavior: 'ignores the cases of the keywords',
+        prBody: 'AfTeR #42',
+        expected: [42],
+      },
+      {
         behavior: 'gets multiple base issues',
         prBody: 'after #16, #9, #25',
         expected: [16, 9, 25],
