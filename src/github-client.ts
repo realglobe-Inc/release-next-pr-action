@@ -20,7 +20,7 @@ export default class {
     })
   }
 
-  async getOpenPRs(
+  async getOpenPullRequests(
     context: Context,
   ): Promise<{ data: PullRequest[]; error: string }> {
     const {
@@ -41,7 +41,7 @@ export default class {
   // We tried to use the REST API v3 before, but it does not work well.
   // It seems that the REST API v3 cannot update draft statuses.
   // In detail, see and run old codes through Git.
-  async releasePR(prNodeId: string): Promise<{ error: string }> {
+  async releasePullRequest(pullNodeId: string): Promise<{ error: string }> {
     try {
       await this._graphql(
         `
@@ -53,7 +53,7 @@ export default class {
         `,
         {
           input: {
-            pullRequestId: prNodeId,
+            pullRequestId: pullNodeId,
           },
         },
       )

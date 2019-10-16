@@ -3,7 +3,7 @@ import * as github from '@actions/github'
 
 import GitHubClient from './github-client'
 import { PullRequest, Context, WebhookPayload } from './github-interfaces'
-import PRAnalyzer from './pr-analyzer'
+import PullRequestAnalyzer from './pull-request-analyzer'
 
 async function run(): Promise<void> {
   try {
@@ -18,53 +18,57 @@ async function run(): Promise<void> {
     const payload: WebhookPayload = context.payload
     // NOTE: `payload` contains `pull_request` since `context` passed
     // `isTargetContext` check.
-    const mergedPR: PullRequest = payload.pull_request!
+    const mergedPull: PullRequest = payload.pull_request!
 
-    // get open PRs
+    // get open pull requests
     const client = new GitHubClient(token)
     const {
-      data: pullRequests,
-      error: getPRsError,
-    }: { data: PullRequest[]; error: string } = await client.getOpenPRs(context)
-    if (getPRsError) {
-      core.setFailed(getPRsError)
+      data: pulls,
+      error: getPullsError,
+    }: {
+      data: PullRequest[]
+      error: string
+    } = await client.getOpenPullRequests(context)
+    if (getPullsError) {
+      core.setFailed(getPullsError)
       return
     }
 
-    // identify next PRs
-    let nextPRs: PullRequest[] = []
-    for (const pr of pullRequests) {
-      const baseIssueNumbers: number[] = new PRAnalyzer(pr).baseIssues()
+    // identify next pull requests
+    let nextPulls: PullRequest[] = []
+    for (const pull of pulls) {
+      const analyzer = new PullRequestAnalyzer(pull)
+      const baseIssueNumbers: number[] = analyzer.baseIssues()
       core.debug(
-        `Base issues of #${pr.number} are [${baseIssueNumbers.join(', ')}]`,
+        `Base issues of #${pull.number} are [${baseIssueNumbers.join(', ')}]`,
       )
-      if (!baseIssueNumbers.includes(mergedPR.number)) {
+      if (!baseIssueNumbers.includes(mergedPull.number)) {
         continue
       }
-      const nextPR: PullRequest = pr
+      const nextPull: PullRequest = pull
 
-      if (!nextPR.draft) {
+      if (!nextPull.draft) {
         // fail but continue
         core.setFailed(
-          `#${nextPR.number} pull request is already released for review.`,
+          `#${nextPull.number} pull request is already released for review.`,
         )
         continue
       }
 
-      nextPRs.push(nextPR)
+      nextPulls.push(nextPull)
     }
 
-    // release next PRs
-    for (const nextPR of nextPRs) {
-      const { error: releaseError }: { error: string } = await client.releasePR(
-        nextPR.node_id,
-      )
+    // release next pull requests
+    for (const nextPull of nextPulls) {
+      const {
+        error: releaseError,
+      }: { error: string } = await client.releasePullRequest(nextPull.node_id)
       if (releaseError) {
         core.setFailed(releaseError)
         return
       }
 
-      core.info(`Released #${nextPR.number} pull request for review!`)
+      core.info(`Released #${nextPull.number} pull request for review!`)
     }
 
     core.info('Complete!')
@@ -92,11 +96,11 @@ function isTargetContext(context: Context): Boolean {
     return false
   }
 
-  // check whether the PR is merged
+  // check whether the pull request is merged
   // NOTE: `payload` contains `pull_request` since `context.eventName` is
   // 'pull_request'.
-  const pr: PullRequest = payload.pull_request!
-  if (!pr.merged) {
+  const pull: PullRequest = payload.pull_request!
+  if (!pull.merged) {
     core.info(`Nothing to do since the pull request is not merged. Bye.`)
     return false
   }

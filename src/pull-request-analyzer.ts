@@ -1,9 +1,9 @@
 import { PullRequest } from './github-interfaces'
 
 export default class {
-  _pr: PullRequest
-  constructor(pr: PullRequest) {
-    this._pr = pr
+  _pull: PullRequest
+  constructor(pull: PullRequest) {
+    this._pull = pull
   }
 
   baseIssues(): number[] {
@@ -11,7 +11,7 @@ export default class {
 
     const statementReg = /^[ \t]*after[ \t]*((?:#(?:\d+)[ \t]*,?[ \t]*)+)/gim
     let statementMatch: string[] | null
-    while ((statementMatch = statementReg.exec(this._pr.body)) != null) {
+    while ((statementMatch = statementReg.exec(this._pull.body)) != null) {
       const issuesText: string = statementMatch[1]
 
       const issueReg = /#(\d+)/g
