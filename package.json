@@ -1,7 +1,7 @@
 {
   "name": "release-next-pr-action",
   "version": "0.0.0",
-  "description": "A GitHub Action to release PRs depending on the merged PR automatically.",
+  "description": "A GitHub Action for handling serial pull requests.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",

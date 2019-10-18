@@ -1,5 +1,5 @@
 name: "Release Next PR"
-description: "Release PRs depending on the merged PR automatically."
+description: "Handles serial pull requests"
 author: "realglobe, Inc."
 inputs:
   github-token:
