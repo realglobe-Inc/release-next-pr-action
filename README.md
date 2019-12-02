@@ -144,7 +144,7 @@ a branch into.
 ### Reviewing and merging serial pull requests
 
 This is the previous example, but is changed a bit:
-Information whether each pull request is draft or not is added.
+Information is added whether each pull request is draft.
 
 ```txt
                  br2
