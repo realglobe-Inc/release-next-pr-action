@@ -107,8 +107,8 @@ If there is pull request \#1 and \#2, and \#2 is a continuation of \#1,
 we call \#2 **"a next pull request"** of \#1 and
 \#1 **"a base pull request"** of \#2.
 
-You can specify base pull requests by the comment of the next pull
-request as below:
+Base pull requests are indicated by the comment of the next pull request
+as below:
 
 ```txt
 after [#n1[, #n2[, ... [, #nn]...]]]
@@ -143,8 +143,8 @@ a branch into.
 
 ### Reviewing and merging serial pull requests
 
-This is the almost same example as one shown above (the difference is that
-this example is added information whether each pull request is draft or not):
+This is the previous example, but is changed a bit:
+Information whether each pull request is draft or not is added.
 
 ```txt
                  br2
