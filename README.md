@@ -265,7 +265,7 @@ had better to remove noise or resolve conflicts in a similar way.
 |    :horse:     |    `:horse:`     | improve performance                                | Non-functional feature (*2) |
 |     :lock:     |     `:lock:`     | improve security                                   | Non-functional feature (*2) |
 |     :mag:      |     `:mag:`      | about test codes                                   |       Maintenability        |
-|     :memo:     |     `:memo:`     | about documentation                                |       Maintenability        |
+|     :memo:     |     `:memo:`     | about documentation (*3)                           |       Maintenability        |
 | :green_heart:  | `:green_heart:`  | refactor                                           |       Maintenability        |
 |   :arrow_up:   |   `:arrow_up:`   | update dependencies (includes code changes for it) |       Maintenability        |
 |    :wrench:    |    `:wrench:`    | configure for development or CI tools              |       Maintenability        |
@@ -273,5 +273,7 @@ had better to remove noise or resolve conflicts in a similar way.
 |    :rocket:    |    `:rocket:`    | about a deploy                                     |           Deploy            |
 | :construction: | `:construction:` | WIP (work in progress)                             |          Temporary          |
 
-*1) By the semantic versioning\
-*2) These may belong to minor update.
+(\*1) By the semantic versioning\
+(\*2) These may belong to minor update.\
+(\*3) Including comments in source code. Their role is just a document,
+and they may be used by document generators.
