@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/realglobe-Inc/release-next-pr-action",
   "dependencies": {
-    "@actions/core": "^1.1.3",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^1.1.0",
     "@types/node": "^12.7.11",
     "typescript": "^3.6.3"
